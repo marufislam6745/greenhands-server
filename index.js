@@ -26,6 +26,8 @@ const mongoClient = await connectToMongoDB()
 const myDB = mongoClient.db('greenhands')
 const myColl = myDB.collection('events')
 
+const joinColl = myDB.collection('joinEvent')
+
 
 app.get('/', (req, res) => {
     res.send('Hello World!')
@@ -41,12 +43,6 @@ app.get('/events', async (req, res) => {
     const result = await myColl.find().toArray()
     res.send(result)
 })
-app.get('/events/:id',async(req,res)=>{
-    const {id}=req.params
-    const result=await myColl.findOne({_id:new ObjectId(id)})
-    res.send(result)
-})
-
 //http://localhost:5000/events/:email
 app.get('/events/:email', async (req, res) => {
     const { email } = req.params
@@ -54,6 +50,13 @@ app.get('/events/:email', async (req, res) => {
     res.send(result)
 
 })
+
+app.get('/events/:id', async (req, res) => {
+    const { id } = req.params
+    const result = await myColl.findOne({ _id: new ObjectId(id) })
+    res.send(result)
+})
+
 //update
 app.patch('/events/:id', async (req, res) => {
     const { id } = req.params
@@ -71,6 +74,13 @@ app.delete('/events/:id', async (req, res) => {
     res.send(result)
 })
 
+
+//http://localhost:5000/join
+app.post('/join', async (req, res) => {
+    const data = req.body
+    const result = await joinColl.insertOne(data)
+    res.send(result)
+})
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
