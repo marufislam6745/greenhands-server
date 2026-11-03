@@ -41,6 +41,11 @@ app.get('/events', async (req, res) => {
     const result = await myColl.find().toArray()
     res.send(result)
 })
+app.get('/events/:id',async(req,res)=>{
+    const {id}=req.params
+    const result=await myColl.findOne({_id:new ObjectId(id)})
+    res.send(result)
+})
 //http://localhost:5000/events/:email
 app.get('/events/:email', async (req, res) => {
     const { email } = req.params
