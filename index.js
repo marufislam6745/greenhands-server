@@ -27,6 +27,7 @@ const myDB = mongoClient.db('greenhands')
 const myColl = myDB.collection('events')
 
 const joinColl = myDB.collection('joinEvent')
+const staticColl=myDB.collection('staticdata')
 
 
 app.get('/', (req, res) => {
@@ -47,6 +48,16 @@ app.get('/events', async (req, res) => {
     const result = await myColl.find({
         date: { $gte: today }
     }).toArray()
+    res.send(result)
+})
+//Recent events
+app.get('/recentevents',async(req,res)=>{
+    const today=new Date().toLocaleDateString('en-CA',{
+        timeZone: 'Asia/Dhaka'
+    })
+    const result=await myColl.find({
+        date:{$gte:today}
+    }).limit(6).toArray()
     res.send(result)
 })
 
@@ -103,6 +114,7 @@ app.delete('/events/:id', async (req, res) => {
 //http://localhost:5000/join
 app.post('/join', async (req, res) => {
     const data = req.body
+    delete data._id
     const result = await joinColl.insertOne(data)
     res.send(result)
 })
@@ -111,9 +123,16 @@ app.get('/join/:email', async (req, res) => {
     const result = await joinColl.find({ useremail: email }).toArray()
     res.send(result)
 })
-app.delete('/join/:id', async (req, res) => {
+app.delete('/joins/:id', async (req, res) => {
     const { id } = req.params
-    const result = await joinColl.deleteOne({ _id: id })
+    const result = await joinColl.deleteOne({ _id:new ObjectId(id) })
+    res.send(result)
+})
+
+
+//gallery section
+app.get('/gallery',async(req,res)=>{
+    const result=await staticColl.find().toArray()
     res.send(result)
 })
 
