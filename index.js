@@ -74,6 +74,7 @@ app.get('/events', async (req, res) => {
     }).toArray()
     res.send(result)
 })
+
 //Recent events
 app.get('/recentevents', async (req, res) => {
     const today = new Date().toLocaleDateString('en-CA', {
