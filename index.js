@@ -110,7 +110,7 @@ app.get('/events/:email',verifyToken, async (req, res) => {
 
 })
 
-app.get('/eventsby/:id', verifyToken, async (req, res) => {
+app.get('/eventsby/:id', async (req, res) => {
     const { id } = req.params
     const result = await myColl.findOne({ _id: new ObjectId(id) })
     res.send(result)
